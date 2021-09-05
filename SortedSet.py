@@ -134,7 +134,7 @@ class SortedSet:
 		return a[i][bisect_left(a[i], x)]
 	
 	def __getitem__(self, x: int) -> T:
-		"Return the x-th element, or IndexError if it doesn't exist. / O((N / BUCKET_RATIO) ** 0.5)"
+		"Return the x-th element, or IndexError if it doesn't exist. / O(N ** 0.5) (fast)"
 		if x < 0:
 			x += self.size
 		if x < 0 or x >= self.size:
@@ -146,7 +146,7 @@ class SortedSet:
 		assert False
 	
 	def index(self, x: T) -> int:
-		"Return the index of x, or ValueError if it doesn't exist. / O((N / BUCKET_RATIO) ** 0.5 + log N)"
+		"Return the index of x, or ValueError if it doesn't exist. / O(N ** 0.5) (fast)"
 		if self.size == 0:
 			raise ValueError
 		idx = self._bucket_index(x)
