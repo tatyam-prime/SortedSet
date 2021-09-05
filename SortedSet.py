@@ -1,7 +1,7 @@
 # https://github.com/tatyam-prime/SortedSet/blob/main/SortedSet.py
 from math import sqrt, ceil
 from bisect import bisect_left, bisect_right
-from typing import Iterable, TypeVar, Union
+from typing import Iterable, TypeVar, Union, Callable
 T = TypeVar('T')
 
 class SortedSet:
@@ -15,8 +15,7 @@ class SortedSet:
 	def _build(self, a: list):
 		size = self.size = len(a)
 		bucket_size = self._new_bucket_size(self.size)
-		self.a = [a[size * i // bucket_size: size * (i + 1) // bucket_size]
-					for i in range(bucket_size)]
+		self.a = [a[size * i // bucket_size: size * (i + 1) // bucket_size] for i in range(bucket_size)]
 	
 	def __init__(self, a: Iterable = []):
 		"Make a new SortedSet from iterable. / O(N) if sorted and unique / O(N log N)"
@@ -27,8 +26,7 @@ class SortedSet:
 
 	def __iter__(self):
 		for i in self.a:
-			for j in i:
-				yield j
+			for j in i: yield j
 	
 	def __len__(self) -> int:
 		return self.size
@@ -47,22 +45,17 @@ class SortedSet:
 		a = self.a
 		while ng - ok > 1:
 			mid = (ng + ok) >> 1
-			if a[mid][0] <= x:
-				ok = mid
-			else:
-				ng = mid
-		if ok == -1:
-			return 0
-		if ng == len(self.a):
-			return ok
+			if a[mid][0] <= x: ok = mid
+			else: ng = mid
+		if ok == -1: return 0
+		if ng == len(self.a): return ok
 		if a[ok][-1] < x:
 			return ok + (len(a[ok]) > len(a[ok + 1]))
 		return ok
 
 	def __contains__(self, x: T) -> bool:
 		"O(log N)"
-		if self.size == 0:
-			return False
+		if self.size == 0: return False
 		a = self.a[self._bucket_index(x)]
 		i = bisect_left(a, x)
 		return i != len(a) and a[i] == x
@@ -74,8 +67,7 @@ class SortedSet:
 			return True
 		a = self.a[self._bucket_index(x)]
 		i = bisect_left(a, x)
-		if i != len(a) and a[i] == x:
-			return False
+		if i != len(a) and a[i] == x: return False
 		a.insert(i, x)
 		self.size += 1
 		if len(a) > len(self.a) * self.REBUILD_RATIO:
@@ -84,12 +76,10 @@ class SortedSet:
 
 	def discard(self, x: T) -> bool:
 		"Remove an element and return True if removed. / O(N ** 0.5)"
-		if self.size == 0:
-			return False
+		if self.size == 0: return False
 		a = self.a[self._bucket_index(x)]
 		i = bisect_left(a, x)
-		if i == len(a) or a[i] != x:
-			return False
+		if i == len(a) or a[i] != x: return False
 		a.pop(i)
 		self.size -= 1
 		if len(a) == 0:
@@ -98,8 +88,7 @@ class SortedSet:
 	
 	def lt(self, x: T) -> Union[T, None]:
 		"Return the largest element < x, or None if it doesn't exist. / O(log N)"
-		if self.size == 0:
-			return None
+		if self.size == 0: return None
 		i = self._bucket_index(x)
 		a = self.a
 		if a[i][0] >= x:
@@ -108,8 +97,7 @@ class SortedSet:
 
 	def le(self, x: T) -> Union[T, None]:
 		"Return the largest element <= x, or None if it doesn't exist. / O(log N)"
-		if self.size == 0:
-			return None
+		if self.size == 0: return None
 		i = self._bucket_index(x)
 		a = self.a
 		if a[i][0] > x:
@@ -118,8 +106,7 @@ class SortedSet:
 
 	def gt(self, x: T) -> Union[T, None]:
 		"Return the smallest element > x, or None if it doesn't exist. / O(log N)"
-		if self.size == 0:
-			return None
+		if self.size == 0: return None
 		i = self._bucket_index(x)
 		a = self.a
 		if a[i][-1] <= x:
@@ -128,8 +115,7 @@ class SortedSet:
 
 	def ge(self, x: T) -> Union[T, None]:
 		"Return the smallest element >= x, or None if it doesn't exist. / O(log N)"
-		if self.size == 0:
-			return None
+		if self.size == 0: return None
 		i = self._bucket_index(x)
 		a = self.a
 		if a[i][-1] < x:
@@ -138,25 +124,57 @@ class SortedSet:
 	
 	def __getitem__(self, x: int) -> T:
 		"Return the x-th element, or IndexError if it doesn't exist. / O(N ** 0.5) (fast)"
-		if x < 0:
-			x += self.size
-		if x < 0 or x >= self.size:
-			raise IndexError
+		if x < 0: x += self.size
+		if x < 0 or x >= self.size: raise IndexError
 		for a in self.a:
-			if x < len(a):
-				return a[x]
+			if x < len(a): return a[x]
 			x -= len(a)
 		assert False
 	
 	def index(self, x: T) -> int:
 		"Return the index of x, or ValueError if it doesn't exist. / O(N ** 0.5) (fast)"
-		if self.size == 0:
-			raise ValueError
+		if self.size == 0: raise ValueError
 		idx = self._bucket_index(x)
 		a = self.a[idx]
 		i = bisect_left(a, x)
-		if i == len(a) or a[i] != x:
-			raise ValueError
-		for j in range(idx):
-			i += len(self.a[j])
+		if i == len(a) or a[i] != x: raise ValueError
+		for j in range(idx): i += len(self.a[j])
 		return i
+
+	def max_right(self, f: Callable[[T], bool]) -> Union[T, None]:
+		"Return the largest x that satisfies f(x) = True, or None if it doesn't exist. f(x) should be monotone. / O(log N) calls"
+		a = self.a
+		ok = -1
+		ng = len(a)
+		while ng - ok > 1:
+			mid = (ok + ng) >> 1
+			if f(a[mid][0]): ok = mid
+			else: ng = mid
+		if ok == -1: return None
+		a = a[ok]
+		ok = 0
+		ng = len(a)
+		while ng - ok > 1:
+			mid = (ok + ng) >> 1
+			if f(a[mid]): ok = mid
+			else: ng = mid
+		return a[ok]
+
+	def min_left(self, f: Callable[[T], bool]) -> Union[T, None]:
+		"Return the smallest x that satisfies f(x) = True, or None if it doesn't exist. f(x) should be monotone. / O(log N) calls"
+		a = self.a
+		ok = len(a)
+		ng = -1
+		while ok - ng > 1:
+			mid = (ok + ng) >> 1
+			if f(a[mid][-1]): ok = mid
+			else: ng = mid
+		if ok == len(a): return None
+		a = a[ok]
+		ok = len(a) - 1
+		ng = -1
+		while ok - ng > 1:
+			mid = (ok + ng) >> 1
+			if f(a[mid]): ok = mid
+			else: ng = mid
+		return a[ok]
