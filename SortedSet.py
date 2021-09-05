@@ -15,12 +15,15 @@ class SortedSet:
 	def _build(self, a: list):
 		size = self.size = len(a)
 		bucket_size = self._new_bucket_size(self.size)
-		self.a = [a[size * i // bucket_size: size *
-                    (i + 1) // bucket_size] for i in range(bucket_size)]
+		self.a = [a[size * i // bucket_size: size * (i + 1) // bucket_size]
+					for i in range(bucket_size)]
 	
 	def __init__(self, a: Iterable = []):
-		"Make a new SortedSet from iterable. / O(N log N)"
-		self._build(sorted(set(a)))
+		"Make a new SortedSet from iterable. / O(N) if sorted and unique / O(N log N)"
+		a = list(a)
+		if not all(a[i] < a[i + 1] for i in range(len(a) - 1)):
+			a = sorted(set(a))
+		self._build(a)
 
 	def __iter__(self):
 		for i in self.a:
