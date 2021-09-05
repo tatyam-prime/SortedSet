@@ -19,7 +19,7 @@ class SortedSet:
                     (i + 1) // bucket_size] for i in range(bucket_size)]
 	
 	def __init__(self, a: Iterable = []):
-		"Make a new SortedSet from iterable. / O(N)"
+		"Make a new SortedSet from iterable. / O(N log N)"
 		self._build(sorted(set(a)))
 
 	def __iter__(self):
