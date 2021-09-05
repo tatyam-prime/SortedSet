@@ -15,7 +15,7 @@ class SortedSet:
 	def _build(self, a: list):
 		size = self.size = len(a)
 		bucket_size = self._new_bucket_size(self.size)
-		self.a = [a[size * i // bucket_size: size * (i + 1) // bucket_size] for i in range(bucket_size)]
+		self.a = [a[size * i // bucket_size : size * (i + 1) // bucket_size] for i in range(bucket_size)]
 	
 	def __init__(self, a: Iterable = []):
 		"Make a new SortedSet from iterable. / O(N) if sorted and unique / O(N log N)"
@@ -27,6 +27,10 @@ class SortedSet:
 	def __iter__(self):
 		for i in self.a:
 			for j in i: yield j
+
+	def __reversed__(self):
+		for i in reversed(self.a):
+			for j in reversed(i): yield j
 	
 	def __len__(self) -> int:
 		return self.size
