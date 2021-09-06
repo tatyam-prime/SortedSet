@@ -1,7 +1,7 @@
 # https://github.com/tatyam-prime/SortedSet/blob/main/SortedSet.py
 from math import sqrt, ceil
 from bisect import bisect_left, bisect_right
-from typing import Iterable, TypeVar, Union, Callable
+from typing import Iterable, TypeVar, Union, Tuple
 T = TypeVar('T')
 
 class SortedSet:
@@ -127,7 +127,10 @@ class SortedSet:
 		return a[i][bisect_left(a[i], x)]
 	
 	def __getitem__(self, x: int) -> T:
-		"Return the x-th element, or IndexError if it doesn't exist. / O(N ** 0.5) (fast)"
+		"Take (i, j) and return the j-th element in the i-th bucket, or IndexError if it doesn't exist. / O(1)"
+		"Take x and return the x-th element, or IndexError if it doesn't exist. / O(N ** 0.5) (fast)"
+		if isinstance(x, tuple):
+			return self.a[x[0]][x[1]]
 		if x < 0: x += self.size
 		if x < 0 or x >= self.size: raise IndexError
 		for a in self.a:
@@ -144,3 +147,23 @@ class SortedSet:
 		if i == len(a) or a[i] != x: raise ValueError
 		for j in range(idx): i += len(self.a[j])
 		return i
+
+	def lower_bound(self, x: T) -> Tuple[int, int]:
+		"Find the smallest element self.a[i][j] >= x and return (i, j), or (len(a), 0) if it doesn't exist. / O(log N)"
+		if self.size == 0:
+			return (0, 0)
+		i = self._bucket_index(x)
+		a = self.a
+		if a[i][-1] < x:
+			return (i + 1, 0)
+		return (i, bisect_left(a[i], x))
+
+	def upper_bound(self, x: T) -> Tuple[int, int]:
+		"Find the smallest element self.a[i][j] > x and return (i, j), or (len(a), 0) if it doesn't exist. / O(log N)"
+		if self.size == 0:
+			return (0, 0)
+		i = self._bucket_index(x)
+		a = self.a
+		if a[i][-1] <= x:
+			return (i + 1, 0)
+		return (i, bisect_right(a[i], x))
