@@ -1,10 +1,10 @@
 # https://github.com/tatyam-prime/SortedSet/blob/main/SortedSet.py
 from math import sqrt, ceil
 from bisect import bisect_left, bisect_right
-from typing import Iterable, TypeVar, Union, Tuple
+from typing import Iterable, TypeVar, Union, Tuple, Generic
 T = TypeVar('T')
 
-class SortedSet:
+class SortedSet(Generic[T]):
 	BUCKET_RATIO = 50
 	REBUILD_RATIO = 170
 
@@ -17,7 +17,7 @@ class SortedSet:
 		bucket_size = self._new_bucket_size(self.size)
 		self.a = [a[size * i // bucket_size : size * (i + 1) // bucket_size] for i in range(bucket_size)]
 	
-	def __init__(self, a: Iterable = []):
+	def __init__(self, a: Iterable[T] = []):
 		"Make a new SortedSet from iterable. / O(N) if sorted and unique / O(N log N)"
 		a = list(a)
 		if not all(a[i] < a[i + 1] for i in range(len(a) - 1)):
@@ -126,7 +126,7 @@ class SortedSet:
 			return a[i + 1][0] if i + 1 < len(self.a) else None
 		return a[i][bisect_left(a[i], x)]
 	
-	def __getitem__(self, x: int) -> T:
+	def __getitem__(self, x: Union[int, Tuple[int, int]]) -> T:
 		"Take (i, j) and return the j-th element in the i-th bucket, or IndexError if it doesn't exist. / O(1)"
 		"Take x and return the x-th element, or IndexError if it doesn't exist. / O(N ** 0.5) (fast)"
 		if isinstance(x, tuple):
@@ -167,3 +167,4 @@ class SortedSet:
 		if a[i][-1] <= x:
 			return (i + 1, 0)
 		return (i, bisect_right(a[i], x))
+	
