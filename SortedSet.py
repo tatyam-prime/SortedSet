@@ -51,11 +51,7 @@ class SortedSet(Generic[T]):
 			mid = (ng + ok) >> 1
 			if a[mid][0] <= x: ok = mid
 			else: ng = mid
-		if ok == -1: return 0
-		if ng == len(self.a): return ok
-		if a[ok][-1] < x:
-			return ok + (len(a[ok]) > len(a[ok + 1]))
-		return ok
+		return ok if ok >= 0 else 0
 
 	def __contains__(self, x: T) -> bool:
 		"O(log N)"
