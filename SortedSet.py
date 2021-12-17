@@ -82,8 +82,7 @@ class SortedSet(Generic[T]):
 		if i == len(a) or a[i] != x: return False
 		a.pop(i)
 		self.size -= 1
-		if len(a) == 0:
-			self._build(list(self))
+		if len(a) == 0: self._build(list(self))
 		return True
 	
 	def lt(self, x: T) -> Union[T, None]:
@@ -125,8 +124,7 @@ class SortedSet(Generic[T]):
 	def __getitem__(self, x: Union[int, Tuple[int, int]]) -> T:
 		"Take (i, j) and return the j-th element in the i-th bucket, or IndexError if it doesn't exist. / O(1)"
 		"Take x and return the x-th element, or IndexError if it doesn't exist. / O(N ** 0.5) (fast)"
-		if isinstance(x, tuple):
-			return self.a[x[0]][x[1]]
+		if isinstance(x, tuple): return self.a[x[0]][x[1]]
 		if x < 0: x += self.size
 		if x < 0 or x >= self.size: raise IndexError
 		for a in self.a:
@@ -146,18 +144,15 @@ class SortedSet(Generic[T]):
 
 	def lower_bound(self, x: T) -> Tuple[int, int]:
 		"Find the smallest element self.a[i][j] >= x and return (i, j), or (len(a), 0) if it doesn't exist. / O(log N)"
-		if self.size == 0:
-			return (0, 0)
+		if self.size == 0: return (0, 0)
 		i = self._bucket_index(x)
 		a = self.a
-		if a[i][-1] < x:
-			return (i + 1, 0)
+		if a[i][-1] < x: return (i + 1, 0)
 		return (i, bisect_left(a[i], x))
 
 	def upper_bound(self, x: T) -> Tuple[int, int]:
 		"Find the smallest element self.a[i][j] > x and return (i, j), or (len(a), 0) if it doesn't exist. / O(log N)"
-		if self.size == 0:
-			return (0, 0)
+		if self.size == 0: return (0, 0)
 		i = self._bucket_index(x)
 		a = self.a
 		if a[i][-1] <= x:
