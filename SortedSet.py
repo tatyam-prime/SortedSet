@@ -1,7 +1,7 @@
 # https://github.com/tatyam-prime/SortedSet/blob/main/SortedSet.py
 from math import sqrt, ceil
 from bisect import bisect_left, bisect_right
-from typing import Iterable, TypeVar, Union, Tuple, Generic
+from typing import Iterable, Iterator, TypeVar, Union, Tuple, Generic
 T = TypeVar('T')
 
 class SortedSet(Generic[T]):
@@ -24,11 +24,11 @@ class SortedSet(Generic[T]):
 			a = sorted(set(a))
 		self._build(a)
 
-	def __iter__(self):
+	def __iter__(self) -> Iterator[T]:
 		for i in self.a:
 			for j in i: yield j
 
-	def __reversed__(self):
+	def __reversed__(self) -> Iterator[T]:
 		for i in reversed(self.a):
 			for j in reversed(i): yield j
 	
