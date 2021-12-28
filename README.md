@@ -1,6 +1,6 @@
 # SortedSet
 
-平方分割を利用した SortedSet です。かなり多機能です。PyPy で動きます。平衡二分木系より速いと思います。
+平方分割を利用した SortedSet です。PyPy で動きます。平衡二分木系より速いと思います。
 
 [SortedSet](SortedSet.py)  
 
