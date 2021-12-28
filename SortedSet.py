@@ -1,5 +1,5 @@
 # https://github.com/tatyam-prime/SortedSet/blob/main/SortedSet.py
-from math import sqrt, ceil
+import math
 from bisect import bisect_left, bisect_right
 from typing import Iterable, Iterator, TypeVar, Union, Tuple, Generic
 T = TypeVar('T')
@@ -10,14 +10,14 @@ class SortedSet(Generic[T]):
 
 	@classmethod
 	def _new_bucket_size(cls, size: int) -> int:
-		return int(ceil(sqrt(size / cls.BUCKET_RATIO)))
+		return int(math.ceil(math.sqrt(size / cls.BUCKET_RATIO)))
 
-	def _build(self, a: list):
+	def _build(self, a: list) -> None:
 		size = self.size = len(a)
 		bucket_size = self._new_bucket_size(self.size)
 		self.a = [a[size * i // bucket_size : size * (i + 1) // bucket_size] for i in range(bucket_size)]
 	
-	def __init__(self, a: Iterable[T] = []):
+	def __init__(self, a: Iterable[T] = []) -> None:
 		"Make a new SortedSet from iterable. / O(N) if sorted and unique / O(N log N)"
 		a = list(a)
 		if not all(a[i] < a[i + 1] for i in range(len(a) - 1)):
@@ -61,7 +61,7 @@ class SortedSet(Generic[T]):
 		return i != len(a) and a[i] == x
 
 	def add(self, x: T) -> bool:
-		"Add an element and return True if added. / O(N ** 0.5)"
+		"Add an element and return True if added. / O(√N)"
 		if self.size == 0:
 			self._build([x])
 			return True
@@ -75,7 +75,7 @@ class SortedSet(Generic[T]):
 		return True
 
 	def discard(self, x: T) -> bool:
-		"Remove an element and return True if removed. / O(N ** 0.5)"
+		"Remove an element and return True if removed. / O(√N)"
 		if self.size == 0: return False
 		a = self.a[self._bucket_index(x)]
 		i = bisect_left(a, x)
@@ -123,7 +123,7 @@ class SortedSet(Generic[T]):
 	
 	def __getitem__(self, x: Union[int, Tuple[int, int]]) -> T:
 		"Take (i, j) and return the j-th element in the i-th bucket, or IndexError if it doesn't exist. / O(1)"
-		"Take x and return the x-th element, or IndexError if it doesn't exist. / O(N ** 0.5) (fast)"
+		"Take x and return the x-th element, or IndexError if it doesn't exist. / O(√N) (fast)"
 		if isinstance(x, tuple): return self.a[x[0]][x[1]]
 		if x < 0: x += self.size
 		if x < 0 or x >= self.size: raise IndexError
@@ -133,7 +133,7 @@ class SortedSet(Generic[T]):
 		assert False
 	
 	def index(self, x: T) -> int:
-		"Return the index of x, or ValueError if it doesn't exist. / O(N ** 0.5) (fast)"
+		"Return the index of x, or ValueError if it doesn't exist. / O(√N) (fast)"
 		if self.size == 0: raise ValueError
 		idx = self._bucket_index(x)
 		a = self.a[idx]
@@ -141,21 +141,3 @@ class SortedSet(Generic[T]):
 		if i == len(a) or a[i] != x: raise ValueError
 		for j in range(idx): i += len(self.a[j])
 		return i
-
-	def lower_bound(self, x: T) -> Tuple[int, int]:
-		"Find the smallest element self.a[i][j] >= x and return (i, j), or (len(a), 0) if it doesn't exist. / O(log N)"
-		if self.size == 0: return (0, 0)
-		i = self._bucket_index(x)
-		a = self.a
-		if a[i][-1] < x: return (i + 1, 0)
-		return (i, bisect_left(a[i], x))
-
-	def upper_bound(self, x: T) -> Tuple[int, int]:
-		"Find the smallest element self.a[i][j] > x and return (i, j), or (len(a), 0) if it doesn't exist. / O(log N)"
-		if self.size == 0: return (0, 0)
-		i = self._bucket_index(x)
-		a = self.a
-		if a[i][-1] <= x:
-			return (i + 1, 0)
-		return (i, bisect_right(a[i], x))
-	
