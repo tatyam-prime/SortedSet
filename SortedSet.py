@@ -87,7 +87,7 @@ class SortedSet(Generic[T]):
 	
 	def lt(self, x: T) -> Union[T, None]:
 		"Return the largest element < x, or None if it doesn't exist. / O(log N)"
-		if self.size == 0: return None
+		if self.size == 0: return
 		i = self._bucket_index(x)
 		a = self.a
 		if a[i][0] >= x:
@@ -96,7 +96,7 @@ class SortedSet(Generic[T]):
 
 	def le(self, x: T) -> Union[T, None]:
 		"Return the largest element <= x, or None if it doesn't exist. / O(log N)"
-		if self.size == 0: return None
+		if self.size == 0: return
 		i = self._bucket_index(x)
 		a = self.a
 		if a[i][0] > x:
@@ -105,7 +105,7 @@ class SortedSet(Generic[T]):
 
 	def gt(self, x: T) -> Union[T, None]:
 		"Return the smallest element > x, or None if it doesn't exist. / O(log N)"
-		if self.size == 0: return None
+		if self.size == 0: return
 		i = self._bucket_index(x)
 		a = self.a
 		if a[i][-1] <= x:
@@ -114,7 +114,7 @@ class SortedSet(Generic[T]):
 
 	def ge(self, x: T) -> Union[T, None]:
 		"Return the smallest element >= x, or None if it doesn't exist. / O(log N)"
-		if self.size == 0: return None
+		if self.size == 0: return
 		i = self._bucket_index(x)
 		a = self.a
 		if a[i][-1] < x:
