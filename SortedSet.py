@@ -121,10 +121,8 @@ class SortedSet(Generic[T]):
 			return a[i + 1][0] if i + 1 < len(self.a) else None
 		return a[i][bisect_left(a[i], x)]
 	
-	def __getitem__(self, x: Union[int, Tuple[int, int]]) -> T:
-		"Take (i, j) and return the j-th element in the i-th bucket, or IndexError if it doesn't exist. / O(1)"
+	def __getitem__(self, x: int) -> T:
 		"Take x and return the x-th element, or IndexError if it doesn't exist. / O(√N) (fast)"
-		if isinstance(x, tuple): return self.a[x[0]][x[1]]
 		if x < 0: x += self.size
 		if x < 0 or x >= self.size: raise IndexError
 		for a in self.a:
