@@ -1,7 +1,7 @@
 # https://github.com/tatyam-prime/SortedSet/blob/main/SortedSet.py
 import math
 from bisect import bisect_left, bisect_right
-from typing import Iterable, Iterator, TypeVar, Union, Tuple, Generic
+from typing import Iterable, Iterator, TypeVar, Union, Generic
 T = TypeVar('T')
 
 class SortedSet(Generic[T]):
