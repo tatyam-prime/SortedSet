@@ -3,12 +3,12 @@
 平方分割を利用した SortedSet です。PyPy で動きます。平衡二分木系より速いと思います。
 
 [SortedSet](SortedSet.py)  
-
+[SortedMultiset](SortedMultiset.py)  
 [使用例](example)  
 
 ## ドキュメント
 
-## SortedSet
+## [SortedSet](SortedSet.py)
 
 ソート済み列をいくつかのバケット (list) に分割して管理します。このとき、(バケットの個数) : (バケット内の個数) = 1 : 50 くらいにします。(insert / erase の定数倍が軽く、バケット再構築の定数倍が重いため)
 あるバケットが空になったり、多すぎたりしたら、1 度まとめて、均等にバケットに分割します。
@@ -53,3 +53,20 @@ x より小さい要素の数を返します。x が s に含まれている場�
 ### s.index_right(x)
 
 x 以下の要素の数を返します。O(√N) (定数倍が小さい)
+
+## [SortedMultiset](SortedMultiset.py)
+
+SortedSet の多重集合版です。同じ要素を複数入れることができます。SortedSet からの変更点は以下の通りです。
+
+### s.add(x)
+
+x が s に含まれているかどうかに関わらず x を追加します。何も返しません。O(√N) amotized / O(N) worst
+
+### s.discard(x)
+
+x が s に含まれていれば x を **1 個** 削除し、True を返します。O(√N) amotized / O(N) worst  
+(C++ の [std::multiset::erase](https://cpprefjp.github.io/reference/set/multiset/erase.html) には x を全て削除してしまうという罠があります。)
+
+### s.count(x)
+
+s に含まれる x の個数を返します。O(√N) (定数倍が小さい)
