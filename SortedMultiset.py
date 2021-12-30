@@ -1,21 +1,18 @@
 # https://github.com/tatyam-prime/SortedSet/blob/main/SortedMultiset.py
 import math
 from bisect import bisect_left, bisect_right, insort
-from typing import Iterable, Iterator, TypeVar, Union, Generic
+from typing import Generic, Iterable, Iterator, TypeVar, Union
 T = TypeVar('T')
 
 class SortedMultiset(Generic[T]):
     BUCKET_RATIO = 50
     REBUILD_RATIO = 170
 
-    @classmethod
-    def _new_bucket_size(cls, size: int) -> int:
-        return int(math.ceil(math.sqrt(size / cls.BUCKET_RATIO)))
-
-    def _build(self, *a) -> None:
-        a = a[0] if a else list(self)
+    def _build(self, a=None) -> None:
+        "Evenly divide `a` into buckets."
+        if a is None: a = list(self)
         size = self.size = len(a)
-        bucket_size = self._new_bucket_size(self.size)
+        bucket_size = int(math.ceil(math.sqrt(size / self.BUCKET_RATIO)))
         self.a = [a[size * i // bucket_size : size * (i + 1) // bucket_size] for i in range(bucket_size)]
     
     def __init__(self, a: Iterable[T] = []) -> None:
@@ -110,7 +107,7 @@ class SortedMultiset(Generic[T]):
         return True
     
     def lt(self, x: T) -> Union[T, None]:
-        "Return the largest element < x, or None if it doesn't exist. / O(log N)"
+        "Find the largest element < x, or None if it doesn't exist. / O(log N)"
         if self.size == 0: return
         i = self._bucket_index_left(x)
         a = self.a
@@ -119,7 +116,7 @@ class SortedMultiset(Generic[T]):
         return a[i][bisect_left(a[i], x) - 1]
 
     def le(self, x: T) -> Union[T, None]:
-        "Return the largest element <= x, or None if it doesn't exist. / O(log N)"
+        "Find the largest element <= x, or None if it doesn't exist. / O(log N)"
         if self.size == 0: return
         i = self._bucket_index_left(x)
         a = self.a
@@ -128,7 +125,7 @@ class SortedMultiset(Generic[T]):
         return a[i][bisect_right(a[i], x) - 1]
 
     def gt(self, x: T) -> Union[T, None]:
-        "Return the smallest element > x, or None if it doesn't exist. / O(log N)"
+        "Find the smallest element > x, or None if it doesn't exist. / O(log N)"
         if self.size == 0: return
         i = self._bucket_index(x)
         a = self.a
@@ -137,7 +134,7 @@ class SortedMultiset(Generic[T]):
         return a[i][bisect_right(a[i], x)]
 
     def ge(self, x: T) -> Union[T, None]:
-        "Return the smallest element >= x, or None if it doesn't exist. / O(log N)"
+        "Find the smallest element >= x, or None if it doesn't exist. / O(log N)"
         if self.size == 0: return
         i = self._bucket_index(x)
         a = self.a
@@ -155,7 +152,7 @@ class SortedMultiset(Generic[T]):
         assert False  # unreachable
     
     def index(self, x: T) -> int:
-        "Return the number of elements < x. / O(√N) (fast)"
+        "Count the number of elements < x. / O(√N) (fast)"
         ans = 0
         for a in self.a:
             if a[-1] >= x:
@@ -164,7 +161,7 @@ class SortedMultiset(Generic[T]):
         return ans
 
     def index_right(self, x: T) -> int:
-        "Return the number of elements <= x. / O(√N) (fast)"
+        "Count the number of elements <= x. / O(√N) (fast)"
         ans = 0
         for a in self.a:
             if a[-1] > x:
