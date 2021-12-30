@@ -36,7 +36,7 @@ class SortedSet(Generic[T]):
 		return self.size
 	
 	def __repr__(self) -> str:
-		return str(self.a)
+		return "SortedSet" + str(self.a)
 	
 	def __str__(self) -> str:
 		s = str(list(self))
