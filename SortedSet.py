@@ -12,7 +12,8 @@ class SortedSet(Generic[T]):
     def _new_bucket_size(cls, size: int) -> int:
         return int(math.ceil(math.sqrt(size / cls.BUCKET_RATIO)))
 
-    def _build(self, a: list) -> None:
+    def _build(self, *a) -> None:
+        a = a[0] if a else list(self)
         size = self.size = len(a)
         bucket_size = self._new_bucket_size(self.size)
         self.a = [a[size * i // bucket_size : size * (i + 1) // bucket_size] for i in range(bucket_size)]
@@ -63,7 +64,8 @@ class SortedSet(Generic[T]):
     def add(self, x: T) -> bool:
         "Add an element and return True if added. / O(√N)"
         if self.size == 0:
-            self._build([x])
+            self.a = [[x]]
+            self.size = 1
             return True
         a = self.a[self._bucket_index(x)]
         i = bisect_left(a, x)
@@ -71,7 +73,7 @@ class SortedSet(Generic[T]):
         a.insert(i, x)
         self.size += 1
         if len(a) > len(self.a) * self.REBUILD_RATIO:
-            self._build(list(self))
+            self._build()
         return True
 
     def discard(self, x: T) -> bool:
@@ -82,7 +84,7 @@ class SortedSet(Generic[T]):
         if i == len(a) or a[i] != x: return False
         a.pop(i)
         self.size -= 1
-        if len(a) == 0: self._build(list(self))
+        if len(a) == 0: self._build()
         return True
     
     def lt(self, x: T) -> Union[T, None]:
