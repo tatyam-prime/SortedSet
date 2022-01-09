@@ -41,10 +41,9 @@ class SortedSet(Generic[T]):
         return "{" + s[1 : len(s) - 1] + "}"
 
     def _find_bucket(self, x: T) -> List[T]:
-        "Find the list which should contain x. self must not be empty."
+        "Find the bucket which should contain x. self must not be empty."
         for a in self.a:
-            if x <= a[-1]:
-                return a
+            if x <= a[-1]: return a
         return a
 
     def __contains__(self, x: T) -> bool:
