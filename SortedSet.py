@@ -5,7 +5,7 @@ from typing import Generic, Iterable, Iterator, TypeVar, Union, List
 T = TypeVar('T')
 
 class SortedSet(Generic[T]):
-    BUCKET_RATIO = 60
+    BUCKET_RATIO = 50
     REBUILD_RATIO = 170
 
     def _build(self, a=None) -> None:
