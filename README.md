@@ -32,11 +32,11 @@ O(√N)
 
 ### s.add(x)
 
-x が s に含まれていなければ x を追加し、True を返します。O(√N) amotized / O(N) worst
+x が s に含まれていなければ x を追加し、True を返します。O(√N) amortized / O(N) worst
 
 ### s.discard(x)
 
-x が s に含まれていれば x を削除し、True を返します。O(√N) amotized / O(N) worst
+x が s に含まれていれば x を削除し、True を返します。O(√N) amortized / O(N) worst
 
 ### s.lt(x) / s.le(x) / s.gt(x) / s.ge(x)
 
@@ -60,11 +60,11 @@ SortedSet の多重集合版です。同じ要素を複数入れることがで�
 
 ### s.add(x)
 
-x が s に含まれているかどうかに関わらず x を追加します。何も返しません。O(√N) amotized / O(N) worst
+x が s に含まれているかどうかに関わらず x を追加します。何も返しません。O(√N) amortized / O(N) worst
 
 ### s.discard(x)
 
-x が s に含まれていれば x を **1 個** 削除し、True を返します。O(√N) amotized / O(N) worst  
+x が s に含まれていれば x を **1 個** 削除し、True を返します。O(√N) amortized / O(N) worst  
 (C++ の [std::multiset::erase](https://cpprefjp.github.io/reference/set/multiset/erase.html) には x を全て削除してしまうという罠があります。)
 
 ### s.count(x)
