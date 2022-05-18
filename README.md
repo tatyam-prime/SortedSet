@@ -70,3 +70,10 @@ x が s に含まれていれば x を **1 個** 削除し、True を返しま�
 ### s.count(x)
 
 s に含まれる x の個数を返します。O(√N) (定数倍が小さい)
+
+## links
+
+コンセプトや中身の簡単な解説が書いてあります
+
+- https://qiita.com/tatyam/items/492c70ac4c955c055602
+- https://speakerdeck.com/tatyam_prime/python-dezui-qiang-falseping-heng-er-fen-tan-suo-mu-wozuo-ru
