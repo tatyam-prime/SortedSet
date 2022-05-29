@@ -1,4 +1,4 @@
-# https://atcoder.jp/contests/abc253/submissions/32059406
+# https://atcoder.jp/contests/abc253/submissions/32077638
 
 # paste SortedMultiset here
 
@@ -14,8 +14,8 @@ for i in range(Q):
         a.add(x)
     elif query[0] == "2":
         x, c = map(int, query[2:].split())
-        c = min(c, a.count(x))
         for _ in range(c):
-            a.discard(x)
+            if not a.discard(x):
+                break
     else:
         print(a[-1] - a[0])
