@@ -1,7 +1,7 @@
 # https://github.com/tatyam-prime/SortedSet/blob/main/SortedMultiset.py
 import math
 from bisect import bisect_left, bisect_right, insort
-from typing import Generic, Iterable, Iterator, TypeVar, Union, List
+from typing import Generic, Iterable, Iterator, TypeVar, Optional, List
 T = TypeVar('T')
 
 class SortedMultiset(Generic[T]):
@@ -79,25 +79,25 @@ class SortedMultiset(Generic[T]):
         if len(a) == 0: self._build()
         return True
 
-    def lt(self, x: T) -> Union[T, None]:
+    def lt(self, x: T) -> Optional[T]:
         "Find the largest element < x, or None if it doesn't exist."
         for a in reversed(self.a):
             if a[0] < x:
                 return a[bisect_left(a, x) - 1]
 
-    def le(self, x: T) -> Union[T, None]:
+    def le(self, x: T) -> Optional[T]:
         "Find the largest element <= x, or None if it doesn't exist."
         for a in reversed(self.a):
             if a[0] <= x:
                 return a[bisect_right(a, x) - 1]
 
-    def gt(self, x: T) -> Union[T, None]:
+    def gt(self, x: T) -> Optional[T]:
         "Find the smallest element > x, or None if it doesn't exist."
         for a in self.a:
             if a[-1] > x:
                 return a[bisect_right(a, x)]
 
-    def ge(self, x: T) -> Union[T, None]:
+    def ge(self, x: T) -> Optional[T]:
         "Find the smallest element >= x, or None if it doesn't exist."
         for a in self.a:
             if a[-1] >= x:
