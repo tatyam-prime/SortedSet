@@ -8,7 +8,7 @@ class SortedSet(Generic[T]):
     BUCKET_RATIO = 50
     REBUILD_RATIO = 170
 
-    def _build(self, a=None) -> None:
+    def _build(self, a: Optional[List[T]] = None) -> None:
         "Evenly divide `a` into buckets."
         if a is None: a = list(self)
         size = self.size = len(a)
