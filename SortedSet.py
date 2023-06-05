@@ -30,6 +30,9 @@ class SortedSet(Generic[T]):
         for i in reversed(self.a):
             for j in reversed(i): yield j
     
+    def __eq__(self, other) -> bool:
+        return list(self) == list(other)
+    
     def __len__(self) -> int:
         return self.size
     
