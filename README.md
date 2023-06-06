@@ -71,6 +71,10 @@ $O(1)$ 時間
 
 `x` 以下の要素の数を返します。 $O(\sqrt N)$ 時間
 
+### `s == t`, `s != t`
+
+集合として同一かどうかを判定します。 $O(N)$ 時間
+
 ## [SortedMultiset](SortedMultiset.py)
 
 SortedSet の多重集合版です。同じ要素を複数入れることができます。SortedSet からの変更点は以下の通りです。
