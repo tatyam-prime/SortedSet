@@ -1,7 +1,7 @@
 # https://github.com/tatyam-prime/SortedSet/blob/main/SortedMultiset.py
 import math
-from bisect import bisect_left, bisect_right, insort
-from typing import Generic, Iterable, Iterator, TypeVar, Optional, List
+from bisect import bisect_left, bisect_right
+from typing import Generic, Iterable, Iterator, List, Tuple, TypeVar, Optional
 T = TypeVar('T')
 
 class SortedMultiset(Generic[T]):
@@ -43,16 +43,15 @@ class SortedMultiset(Generic[T]):
         s = str(list(self))
         return "{" + s[1 : len(s) - 1] + "}"
 
-    def _find_bucket(self, x: T) -> List[T]:
-        "Find the bucket which should contain x. self must not be empty."
+    def _position(self, x: T) -> Tuple[List[T], int]:
+        "Find the bucket and position which x should be inserted. self must not be empty."
         for a in self.a:
-            if x <= a[-1]: return a
-        return a
+            if x <= a[-1]: break
+        return (a, bisect_left(a, x))
 
     def __contains__(self, x: T) -> bool:
         if self.size == 0: return False
-        a = self._find_bucket(x)
-        i = bisect_left(a, x)
+        a, i = self._position(x)
         return i != len(a) and a[i] == x
 
     def count(self, x: T) -> int:
@@ -65,8 +64,8 @@ class SortedMultiset(Generic[T]):
             self.a = [[x]]
             self.size = 1
             return
-        a = self._find_bucket(x)
-        insort(a, x)
+        a, i = self._position(x)
+        a.insert(i, x)
         self.size += 1
         if len(a) > len(self.a) * self.REBUILD_RATIO:
             self._build()
@@ -80,8 +79,7 @@ class SortedMultiset(Generic[T]):
     def discard(self, x: T) -> bool:
         "Remove an element and return True if removed. / O(√N)"
         if self.size == 0: return False
-        a = self._find_bucket(x)
-        i = bisect_left(a, x)
+        a, i = self._position(x)
         if i == len(a) or a[i] != x: return False
         self._pop(a, i)
         return True
