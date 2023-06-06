@@ -44,11 +44,15 @@ $O(1)$ 時間
 
 ### `s.add(x)`
 
-`x` が `s` に含まれていなければ `x` を追加し、`True` を返します。償却 $O(\sqrt N)$ 時間
+`x` が `s` に含まれていなければ `x` を追加し、`True` を返します。含まれている場合は `False` を返します。
+
+償却 $O(\sqrt N)$ 時間
 
 ### `s.discard(x)`
 
-`x` が `s` に含まれていれば `x` を削除し、`True` を返します。償却 $O(\sqrt N)$ 時間
+`x` が `s` に含まれていれば `x` を削除し、`True` を返します。含まれていない場合は `False` を返します。
+
+償却 $O(\sqrt N)$ 時間
 
 ### `s.lt(x)` / `s.le(x)` / `s.gt(x)` / `s.ge(x)`
 
@@ -77,7 +81,10 @@ SortedSet の多重集合版です。同じ要素を複数入れることがで�
 
 ### `s.discard(x)`
 
-`x` が `s` に含まれていれば `x` を **1 個** 削除し、`True` を返します。償却 $O(\sqrt N)$ 時間
+`x` が `s` に含まれていれば `x` を **1 個** 削除し、`True` を返します。含まれていない場合は `False` を返します。
+
+償却 $O(\sqrt N)$ 時間
+
 (C++ の [std::multiset::erase](https://cpprefjp.github.io/reference/set/multiset/erase.html) には `x` を全て削除してしまうという罠があります。)
 
 ### `s.count(x)`
