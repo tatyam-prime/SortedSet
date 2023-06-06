@@ -106,12 +106,15 @@ class SortedSet(Generic[T]):
                 return a[bisect_left(a, x)]
     
     def __getitem__(self, x: int) -> T:
-        "Return the x-th element, or IndexError if it doesn't exist."
-        if x < 0: x += self.size
-        if x < 0: raise IndexError
-        for a in self.a:
-            if x < len(a): return a[x]
-            x -= len(a)
+        "Return the x-th element."
+        if x < 0:
+            for a in reversed(self.a):
+                x += len(a)
+                if x < len(a): return a[x]
+        else:
+            for a in self.a:
+                if x < len(a): return a[x]
+                x -= len(a)
         raise IndexError
     
     def index(self, x: T) -> int:
