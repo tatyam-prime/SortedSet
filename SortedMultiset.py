@@ -115,7 +115,7 @@ class SortedMultiset(Generic[T]):
         if i < 0:
             for a in reversed(self.a):
                 i += len(a)
-                if i < len(a): return a[i]
+                if i >= 0: return a[i]
         else:
             for a in self.a:
                 if i < len(a): return a[i]
@@ -127,7 +127,7 @@ class SortedMultiset(Generic[T]):
         if i < 0:
             for a in reversed(self.a):
                 i += len(a)
-                if i < len(a): return self._pop(a, i)
+                if i >= 0: return self._pop(a, i)
         else:
             for a in self.a:
                 if i < len(a): return self._pop(a, i)
