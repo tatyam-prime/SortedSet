@@ -1,6 +1,6 @@
 # https://atcoder.jp/contests/abc294/submissions/41999391
 
-# paste SortedMultiset here
+# paste SortedSet here
 
 import sys
 input = sys.stdin.readline
