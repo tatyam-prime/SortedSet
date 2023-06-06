@@ -69,6 +69,12 @@ class SortedSet(Generic[T]):
         if len(a) > len(self.a) * self.REBUILD_RATIO:
             self._build()
         return True
+    
+    def _pop(self, a: List[T], i: int) -> T:
+        ans = a.pop(i)
+        self.size -= 1
+        if not a: self._build()
+        return ans
 
     def discard(self, x: T) -> bool:
         "Remove an element and return True if removed. / O(√N)"
@@ -76,9 +82,7 @@ class SortedSet(Generic[T]):
         a = self._find_bucket(x)
         i = bisect_left(a, x)
         if i == len(a) or a[i] != x: return False
-        a.pop(i)
-        self.size -= 1
-        if len(a) == 0: self._build()
+        self._pop(a, i)
         return True
     
     def lt(self, x: T) -> Optional[T]:
@@ -105,16 +109,28 @@ class SortedSet(Generic[T]):
             if a[-1] >= x:
                 return a[bisect_left(a, x)]
     
-    def __getitem__(self, x: int) -> T:
-        "Return the x-th element."
-        if x < 0:
+    def __getitem__(self, i: int) -> T:
+        "Return the i-th element."
+        if i < 0:
             for a in reversed(self.a):
-                x += len(a)
-                if x < len(a): return a[x]
+                i += len(a)
+                if i < len(a): return a[i]
         else:
             for a in self.a:
-                if x < len(a): return a[x]
-                x -= len(a)
+                if i < len(a): return a[i]
+                i -= len(a)
+        raise IndexError
+    
+    def pop(self, i: int = -1) -> T:
+        "Pop and return the i-th element."
+        if i < 0:
+            for a in reversed(self.a):
+                i += len(a)
+                if i < len(a): return self._pop(a, i)
+        else:
+            for a in self.a:
+                if i < len(a): return self._pop(a, i)
+                i -= len(a)
         raise IndexError
     
     def index(self, x: T) -> int:
