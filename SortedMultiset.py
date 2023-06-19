@@ -11,13 +11,14 @@ class SortedMultiset(Generic[T]):
     def _build(self, a: Optional[List[T]] = None) -> None:
         "Evenly divide `a` into buckets."
         if a is None: a = list(self)
-        size = self.size = len(a)
+        size = len(a)
         bucket_size = int(math.ceil(math.sqrt(size / self.BUCKET_RATIO)))
         self.a = [a[size * i // bucket_size : size * (i + 1) // bucket_size] for i in range(bucket_size)]
     
     def __init__(self, a: Iterable[T] = []) -> None:
         "Make a new SortedMultiset from iterable. / O(N) if sorted / O(N log N)"
         a = list(a)
+        self.size = len(a)
         if not all(a[i] <= a[i + 1] for i in range(len(a) - 1)):
             a = sorted(a)
         self._build(a)
