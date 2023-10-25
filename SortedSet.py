@@ -5,23 +5,22 @@ from typing import Generic, Iterable, Iterator, List, Tuple, TypeVar, Optional
 T = TypeVar('T')
 
 class SortedSet(Generic[T]):
-    BUCKET_RATIO = 50
-    REBUILD_RATIO = 170
-
-    def _build(self, a: Optional[List[T]] = None) -> None:
-        "Evenly divide `a` into buckets."
-        if a is None: a = list(self)
-        size = len(a)
-        bucket_size = int(math.ceil(math.sqrt(size / self.BUCKET_RATIO)))
-        self.a = [a[size * i // bucket_size : size * (i + 1) // bucket_size] for i in range(bucket_size)]
+    BUCKET_RATIO = 16
+    SPLIT_RATIO = 24
     
     def __init__(self, a: Iterable[T] = []) -> None:
         "Make a new SortedSet from iterable. / O(N) if sorted and unique / O(N log N)"
         a = list(a)
-        self.size = len(a)
-        if not all(a[i] < a[i + 1] for i in range(len(a) - 1)):
-            a = sorted(set(a))
-        self._build(a)
+        n = self.size = len(a)
+        if any(a[i] > a[i + 1] for i in range(n - 1)):
+            a.sort()
+        if any(a[i] >= a[i + 1] for i in range(n - 1)):
+            a, b = [], a
+            for x in b:
+                if not a or a[-1] != x:
+                    a.append(x)
+        bucket_size = int(math.ceil(math.sqrt(n / self.BUCKET_RATIO)))
+        self.a = [a[n * i // bucket_size : n * (i + 1) // bucket_size] for i in range(bucket_size)]
 
     def __iter__(self) -> Iterator[T]:
         for i in self.a:
@@ -44,15 +43,15 @@ class SortedSet(Generic[T]):
         s = str(list(self))
         return "{" + s[1 : len(s) - 1] + "}"
 
-    def _position(self, x: T) -> Tuple[List[T], int]:
-        "Find the bucket and position which x should be inserted. self must not be empty."
-        for a in self.a:
+    def _position(self, x: T) -> Tuple[List[T], int, int]:
+        "return the bucket, index of the bucket and position which x should be inserted. self must not be empty."
+        for i, a in enumerate(self.a):
             if x <= a[-1]: break
-        return (a, bisect_left(a, x))
+        return (a, i, bisect_left(a, x))
 
     def __contains__(self, x: T) -> bool:
         if self.size == 0: return False
-        a, i = self._position(x)
+        a, _, i = self._position(x)
         return i != len(a) and a[i] == x
 
     def add(self, x: T) -> bool:
@@ -61,26 +60,27 @@ class SortedSet(Generic[T]):
             self.a = [[x]]
             self.size = 1
             return True
-        a, i = self._position(x)
+        a, b, i = self._position(x)
         if i != len(a) and a[i] == x: return False
         a.insert(i, x)
         self.size += 1
-        if len(a) > len(self.a) * self.REBUILD_RATIO:
-            self._build()
+        if len(a) > len(self.a) * self.SPLIT_RATIO:
+            mid = len(a) >> 1
+            self.a[b:b+1] = [a[:mid], a[mid:]]
         return True
     
-    def _pop(self, a: List[T], i: int) -> T:
+    def _pop(self, a: List[T], b: int, i: int) -> T:
         ans = a.pop(i)
         self.size -= 1
-        if not a: self._build()
+        if not a: del self.a[b]
         return ans
 
     def discard(self, x: T) -> bool:
         "Remove an element and return True if removed. / O(√N)"
         if self.size == 0: return False
-        a, i = self._position(x)
+        a, b, i = self._position(x)
         if i == len(a) or a[i] != x: return False
-        self._pop(a, i)
+        self._pop(a, b, i)
         return True
     
     def lt(self, x: T) -> Optional[T]:
@@ -122,12 +122,12 @@ class SortedSet(Generic[T]):
     def pop(self, i: int = -1) -> T:
         "Pop and return the i-th element."
         if i < 0:
-            for a in reversed(self.a):
+            for b, a in enumerate(reversed(self.a)):
                 i += len(a)
-                if i >= 0: return self._pop(a, i)
+                if i >= 0: return self._pop(a, ~b, i)
         else:
-            for a in self.a:
-                if i < len(a): return self._pop(a, i)
+            for b, a in enumerate(self.a):
+                if i < len(a): return self._pop(a, b, i)
                 i -= len(a)
         raise IndexError
     
