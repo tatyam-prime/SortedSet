@@ -39,7 +39,7 @@ class SortedMultiset(Generic[T]):
         return "{" + s[1 : len(s) - 1] + "}"
 
     def _position(self, x: T) -> Tuple[List[T], int, int]:
-        "return the bucket, index of the bucket and position which x should be inserted. self must not be empty."
+        "return the bucket, index of the bucket and position in which x should be. self must not be empty."
         for i, a in enumerate(self.a):
             if x <= a[-1]: break
         return (a, i, bisect_left(a, x))
