@@ -11,7 +11,7 @@ class SortedSet(Generic[T]):
     def __init__(self, a: Iterable[T] = []) -> None:
         "Make a new SortedSet from iterable. / O(N) if sorted and unique / O(N log N)"
         a = list(a)
-        n = self.size = len(a)
+        n = len(a)
         if any(a[i] > a[i + 1] for i in range(n - 1)):
             a.sort()
         if any(a[i] >= a[i + 1] for i in range(n - 1)):
@@ -19,6 +19,7 @@ class SortedSet(Generic[T]):
             for x in b:
                 if not a or a[-1] != x:
                     a.append(x)
+        n = self.size = len(a)
         bucket_size = int(math.ceil(math.sqrt(n / self.BUCKET_RATIO)))
         self.a = [a[n * i // bucket_size : n * (i + 1) // bucket_size] for i in range(bucket_size)]
 
