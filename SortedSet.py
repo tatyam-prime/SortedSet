@@ -20,8 +20,8 @@ class SortedSet(Generic[T]):
                 if not a or a[-1] != x:
                     a.append(x)
         n = self.size = len(a)
-        bucket_size = int(math.ceil(math.sqrt(n / self.BUCKET_RATIO)))
-        self.a = [a[n * i // bucket_size : n * (i + 1) // bucket_size] for i in range(bucket_size)]
+        num_bucket = int(math.ceil(math.sqrt(n / self.BUCKET_RATIO)))
+        self.a = [a[n * i // num_bucket : n * (i + 1) // num_bucket] for i in range(num_bucket)]
 
     def __iter__(self) -> Iterator[T]:
         for i in self.a:
