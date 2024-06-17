@@ -61,12 +61,12 @@ $O(1)$ 時間
 ### `s[i]`
 
 下から `i` 番目 / 上から `~i` 番目 の要素を返します。存在しない場合は `IndexError` を返します。  
-`abs(i)` が小さいと高速に動作します。 $O(\frac{|i|}{\sqrt N})$ 時間
+`abs(i)` が小さいと高速に動作します。 $O(\min(|i|, \sqrt N))$ 時間
 
 ### `s.pop(i=-1)`
 
 下から `i` 番目 / 上から `~i` 番目 の要素を削除するとともに返します。存在しない場合は `IndexError` を返します。  
-`abs(i)` が小さいと高速に動作します。 $O(\frac{|i|}{\sqrt N})$ 時間
+`abs(i)` が小さいと高速に動作します。 $O(\min(|i|, \sqrt N))$ 時間
 
 ### `s.index(x)`
 
@@ -102,7 +102,7 @@ s に含まれる x の個数を返します。 $O(\sqrt N)$ 時間
 
 ## links
 
-コンセプトや中身の簡単な解説が書いてあります
+コンセプトや中身の簡単な解説が書いてあります (昔は偏ったら rebuild していましたが、今は split しています)
 
 - https://qiita.com/tatyam/items/492c70ac4c955c055602
 - https://speakerdeck.com/tatyam_prime/python-dezui-qiang-falseping-heng-er-fen-tan-suo-mu-wozuo-ru
