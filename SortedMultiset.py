@@ -1,7 +1,7 @@
 # https://github.com/tatyam-prime/SortedSet/blob/main/SortedMultiset.py
 import math
 from bisect import bisect_left, bisect_right
-from typing import Generic, Iterable, Iterator, List, Tuple, TypeVar, Optional
+from typing import Generic, Iterable, Iterator, TypeVar
 T = TypeVar('T')
 
 class SortedMultiset(Generic[T]):
@@ -38,7 +38,7 @@ class SortedMultiset(Generic[T]):
         s = str(list(self))
         return "{" + s[1 : len(s) - 1] + "}"
 
-    def _position(self, x: T) -> Tuple[List[T], int, int]:
+    def _position(self, x: T) -> tuple[list[T], int, int]:
         "return the bucket, index of the bucket and position in which x should be. self must not be empty."
         for i, a in enumerate(self.a):
             if x <= a[-1]: break
@@ -66,7 +66,7 @@ class SortedMultiset(Generic[T]):
             mid = len(a) >> 1
             self.a[b:b+1] = [a[:mid], a[mid:]]
     
-    def _pop(self, a: List[T], b: int, i: int) -> T:
+    def _pop(self, a: list[T], b: int, i: int) -> T:
         ans = a.pop(i)
         self.size -= 1
         if not a: del self.a[b]
@@ -80,25 +80,25 @@ class SortedMultiset(Generic[T]):
         self._pop(a, b, i)
         return True
 
-    def lt(self, x: T) -> Optional[T]:
+    def lt(self, x: T) -> T | None:
         "Find the largest element < x, or None if it doesn't exist."
         for a in reversed(self.a):
             if a[0] < x:
                 return a[bisect_left(a, x) - 1]
 
-    def le(self, x: T) -> Optional[T]:
+    def le(self, x: T) -> T | None:
         "Find the largest element <= x, or None if it doesn't exist."
         for a in reversed(self.a):
             if a[0] <= x:
                 return a[bisect_right(a, x) - 1]
 
-    def gt(self, x: T) -> Optional[T]:
+    def gt(self, x: T) -> T | None:
         "Find the smallest element > x, or None if it doesn't exist."
         for a in self.a:
             if a[-1] > x:
                 return a[bisect_right(a, x)]
 
-    def ge(self, x: T) -> Optional[T]:
+    def ge(self, x: T) -> T | None:
         "Find the smallest element >= x, or None if it doesn't exist."
         for a in self.a:
             if a[-1] >= x:
