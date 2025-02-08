@@ -4,6 +4,7 @@
 
 [SortedSet](SortedSet.py)  
 [SortedMultiset](SortedMultiset.py)  
+[BucketList](BucketList.py)  
 [使用例](example)  
 
 ## ドキュメント
@@ -106,3 +107,7 @@ s に含まれる x の個数を返します。 $O(\sqrt N)$ 時間
 
 - https://qiita.com/tatyam/items/492c70ac4c955c055602
 - https://speakerdeck.com/tatyam_prime/python-dezui-qiang-falseping-heng-er-fen-tan-suo-mu-wozuo-ru
+
+# BucketList
+
+SortedMultiset のソートしないバージョンです。スライスは実装していません。
