@@ -101,14 +101,14 @@ SortedSet の多重集合版です。同じ要素を複数入れることがで�
 
 s に含まれる x の個数を返します。 $O(\sqrt N)$ 時間
 
+## [BucketList](BucketList.py)
+
+SortedMultiset のソートしないバージョンです。`list` と同様に扱えます。  
+スライスは実装していません。
+
 ## links
 
 コンセプトや中身の簡単な解説が書いてあります (昔は偏ったら rebuild していましたが、今は split しています)
 
 - https://qiita.com/tatyam/items/492c70ac4c955c055602
 - https://speakerdeck.com/tatyam_prime/python-dezui-qiang-falseping-heng-er-fen-tan-suo-mu-wozuo-ru
-
-# BucketList
-
-SortedMultiset のソートしないバージョンです。`list` と同様に扱えます。  
-スライスは実装していません。
