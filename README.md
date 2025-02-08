@@ -110,4 +110,5 @@ s に含まれる x の個数を返します。 $O(\sqrt N)$ 時間
 
 # BucketList
 
-SortedMultiset のソートしないバージョンです。スライスは実装していません。
+SortedMultiset のソートしないバージョンです。`list` と同様に扱えます。  
+スライスは実装していません。
