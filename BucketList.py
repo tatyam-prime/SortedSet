@@ -37,6 +37,7 @@ class BucketList(Generic[T]):
         return str(list(self))
 
     def __contains__(self, x: T) -> bool:
+        "Return True if x is in the bucket list. / O(N)"
         for y in self:
             if x == y: return True
         return False
@@ -49,6 +50,7 @@ class BucketList(Generic[T]):
             self.a[b:b+1] = [a[:mid], a[mid:]]
 
     def insert(self, i: int, x: T) -> None:
+        "Insert x at the i-th position. / O(√N)"
         if self.size == 0:
             if i != 0 and i != -1: raise IndexError
             self.a = [[x]]
@@ -64,6 +66,7 @@ class BucketList(Generic[T]):
                 i -= len(a)
 
     def append(self, x: T) -> None:
+        "Append x to the end of the list. / amortized O(1)"
         a = self.a[-1]
         return self._insert(a, len(self.a) - 1, len(a), x)
     
@@ -88,6 +91,7 @@ class BucketList(Generic[T]):
         return ans
     
     def pop(self, i: int = -1) -> T:
+        "Remove and return the i-th element. / O(√N) / O(-i) if i < 0"
         if i < 0:
             for b, a in enumerate(reversed(self.a)):
                 i += len(a)
@@ -99,14 +103,17 @@ class BucketList(Generic[T]):
         raise IndexError
 
     def count(self, x: T) -> int:
+        "Return the number of occurrences of x. / O(N)"
         return sum(1 for y in self if x == y)
 
     def index(self, x: T) -> int:
+        "Return the index of the first occurrence of x, raise ValueError if not found. / O(N)"
         for i, y in enumerate(self):
             if x == y: return i
         raise ValueError
     
     def remove(self, x: T) -> None:
+        "Remove the first occurrence of x, raise ValueError if not found. / O(N)"
         self.pop(self.index(x))
 
     def clear(self) -> None:
