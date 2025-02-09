@@ -64,6 +64,7 @@ class BucketList(Generic[T]):
             for b, a in enumerate(self.a):
                 if i <= len(a): return self._insert(a, b, i, x)
                 i -= len(a)
+        raise IndexError
 
     def append(self, x: T) -> None:
         "Append x to the end of the list. / amortized O(1)"
