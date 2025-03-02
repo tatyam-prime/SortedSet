@@ -68,6 +68,10 @@ class BucketList(Generic[T]):
 
     def append(self, x: T) -> None:
         "Append x to the end of the list. / amortized O(1)"
+        if self.size == 0:
+            self.a = [[x]]
+            self.size = 1
+            return
         a = self.a[-1]
         return self._insert(a, len(self.a) - 1, len(a), x)
     
