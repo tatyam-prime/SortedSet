@@ -1,4 +1,4 @@
-# https://github.com/tatyam-prime/SortedSet/blob/main/codon/SortedSet.py
+# https://github.com/tatyam-prime/SortedSet/blob/main/sortedset/codon/SortedSet.py
 import math
 from bisect import bisect_left, bisect_right
 from typing import ClassVar, Generator, Optional

@@ -1,25 +1,19 @@
-# https://github.com/tatyam-prime/SortedSet/blob/main/SortedSet.py
+# https://github.com/tatyam-prime/SortedSet/blob/main/sortedset/SortedMultiset.py
 import math
 from bisect import bisect_left, bisect_right
 from typing import Generic, Iterable, Iterator, TypeVar
 T = TypeVar('T')
 
-class SortedSet(Generic[T]):
+class SortedMultiset(Generic[T]):
     BUCKET_RATIO = 16
     SPLIT_RATIO = 24
     
     def __init__(self, a: Iterable[T] = []) -> None:
-        "Make a new SortedSet from iterable. / O(N) if sorted and unique / O(N log N)"
+        "Make a new SortedMultiset from iterable. / O(N) if sorted / O(N log N)"
         a = list(a)
-        n = len(a)
+        n = self.size = len(a)
         if any(a[i] > a[i + 1] for i in range(n - 1)):
             a.sort()
-        if any(a[i] >= a[i + 1] for i in range(n - 1)):
-            a, b = [], a
-            for x in b:
-                if not a or a[-1] != x:
-                    a.append(x)
-        n = self.size = len(a)
         num_bucket = int(math.ceil(math.sqrt(n / self.BUCKET_RATIO)))
         self.a = [a[n * i // num_bucket : n * (i + 1) // num_bucket] for i in range(num_bucket)]
 
@@ -38,7 +32,7 @@ class SortedSet(Generic[T]):
         return self.size
     
     def __repr__(self) -> str:
-        return "SortedSet" + str(self.a)
+        return "SortedMultiset" + str(self.a)
     
     def __str__(self) -> str:
         s = str(list(self))
@@ -55,20 +49,22 @@ class SortedSet(Generic[T]):
         a, _, i = self._position(x)
         return i != len(a) and a[i] == x
 
-    def add(self, x: T) -> bool:
-        "Add an element and return True if added. / O(√N)"
+    def count(self, x: T) -> int:
+        "Count the number of x."
+        return self.index_right(x) - self.index(x)
+
+    def add(self, x: T) -> None:
+        "Add an element. / O(√N)"
         if self.size == 0:
             self.a = [[x]]
             self.size = 1
-            return True
+            return
         a, b, i = self._position(x)
-        if i != len(a) and a[i] == x: return False
         a.insert(i, x)
         self.size += 1
         if len(a) > len(self.a) * self.SPLIT_RATIO:
             mid = len(a) >> 1
             self.a[b:b+1] = [a[:mid], a[mid:]]
-        return True
     
     def _pop(self, a: list[T], b: int, i: int) -> T:
         ans = a.pop(i)
@@ -83,7 +79,7 @@ class SortedSet(Generic[T]):
         if i == len(a) or a[i] != x: return False
         self._pop(a, b, i)
         return True
-    
+
     def lt(self, x: T) -> T | None:
         "Find the largest element < x, or None if it doesn't exist."
         for a in reversed(self.a):
@@ -131,7 +127,7 @@ class SortedSet(Generic[T]):
                 if i < len(a): return self._pop(a, b, i)
                 i -= len(a)
         raise IndexError
-    
+
     def index(self, x: T) -> int:
         "Count the number of elements < x."
         ans = 0
