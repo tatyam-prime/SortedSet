@@ -1,35 +1,51 @@
-# https://github.com/tatyam-prime/SortedSet/blob/main/SortedMultiset.py
+# https://github.com/tatyam-prime/SortedSet/blob/main/sortedset/codon/SortedMultiset.py
 import math
 from bisect import bisect_left, bisect_right
-from typing import Generic, Iterable, Iterator, TypeVar
-T = TypeVar('T')
+from typing import ClassVar, Generator, Optional
 
-class SortedMultiset(Generic[T]):
-    BUCKET_RATIO = 16
-    SPLIT_RATIO = 24
+class SortedMultiset[T]:
+    size: int
+    a: list[list[T]]
+    BUCKET_RATIO: ClassVar[int] = 16
+    SPLIT_RATIO: ClassVar[int] = 24
+
+    def __init__(self) -> None:
+        self.size = 0
+        self.a = []
+
+    def __init__(self, a: Generator[T]) -> None:
+        self.__init__(list(a))
     
-    def __init__(self, a: Iterable[T] = []) -> None:
-        "Make a new SortedMultiset from iterable. / O(N) if sorted / O(N log N)"
-        a = list(a)
+    def __init__(self, a: list[T]) -> None:
+        "Make a new SortedMultiset from a list. / O(N) if sorted / O(N log N)"
         n = self.size = len(a)
         if any(a[i] > a[i + 1] for i in range(n - 1)):
             a.sort()
         num_bucket = int(math.ceil(math.sqrt(n / self.BUCKET_RATIO)))
         self.a = [a[n * i // num_bucket : n * (i + 1) // num_bucket] for i in range(num_bucket)]
 
-    def __iter__(self) -> Iterator[T]:
+    def __iter__(self) -> Generator[T]:
         for i in self.a:
             for j in i: yield j
 
-    def __reversed__(self) -> Iterator[T]:
+    def __reversed__(self) -> Generator[T]:
         for i in reversed(self.a):
             for j in reversed(i): yield j
     
-    def __eq__(self, other) -> bool:
-        return list(self) == list(other)
-    
+    def __eq__(self, other: SortedMultiset[T]) -> bool:
+        if len(self) != len(other): return False
+        for x, y in zip(self, other):
+            if x != y: return False
+        return True
+
+    def __ne__(self, other: SortedMultiset[T]) -> bool:
+        return not self.__eq__(other)
+
     def __len__(self) -> int:
         return self.size
+    
+    def __bool__(self) -> bool:
+        return self.size > 0
     
     def __repr__(self) -> str:
         return "SortedMultiset" + str(self.a)
@@ -80,25 +96,25 @@ class SortedMultiset(Generic[T]):
         self._pop(a, b, i)
         return True
 
-    def lt(self, x: T) -> T | None:
+    def lt(self, x: T) -> Optional[T]:
         "Find the largest element < x, or None if it doesn't exist."
         for a in reversed(self.a):
             if a[0] < x:
                 return a[bisect_left(a, x) - 1]
 
-    def le(self, x: T) -> T | None:
+    def le(self, x: T) -> Optional[T]:
         "Find the largest element <= x, or None if it doesn't exist."
         for a in reversed(self.a):
             if a[0] <= x:
                 return a[bisect_right(a, x) - 1]
 
-    def gt(self, x: T) -> T | None:
+    def gt(self, x: T) -> Optional[T]:
         "Find the smallest element > x, or None if it doesn't exist."
         for a in self.a:
             if a[-1] > x:
                 return a[bisect_right(a, x)]
 
-    def ge(self, x: T) -> T | None:
+    def ge(self, x: T) -> Optional[T]:
         "Find the smallest element >= x, or None if it doesn't exist."
         for a in self.a:
             if a[-1] >= x:
@@ -114,7 +130,7 @@ class SortedMultiset(Generic[T]):
             for a in self.a:
                 if i < len(a): return a[i]
                 i -= len(a)
-        raise IndexError
+        raise IndexError("index out of range")
     
     def pop(self, i: int = -1) -> T:
         "Pop and return the i-th element."
@@ -126,7 +142,7 @@ class SortedMultiset(Generic[T]):
             for b, a in enumerate(self.a):
                 if i < len(a): return self._pop(a, b, i)
                 i -= len(a)
-        raise IndexError
+        raise IndexError("index out of range")
 
     def index(self, x: T) -> int:
         "Count the number of elements < x."

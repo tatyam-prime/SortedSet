@@ -2,9 +2,9 @@
 
 平衡 $\Theta(\sqrt N)$ 分木の SortedSet です。PyPy で動きます。平衡二分木系より速いと思います。
 
-[SortedSet](SortedSet.py)  
-[SortedMultiset](SortedMultiset.py)  
-[BucketList](BucketList.py)  
+[SortedSet](sortedset/SortedSet.py)  
+[SortedMultiset](sortedset/SortedMultiset.py)  
+[BucketList](sortedset/BucketList.py)  
 [使用例](example)  
 
 ## ドキュメント

@@ -6,7 +6,7 @@ import random
 # Add the parent directory to the path to import BucketList
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from BucketList import BucketList
+from sortedset.BucketList import BucketList
 
 def test_init():
     bl = BucketList([1, 2, 3, 4, 5])
